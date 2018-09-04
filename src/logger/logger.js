@@ -20,8 +20,7 @@ const loggerDevelopment = createLogger({
         new transports.Console(),
         new transports.File({filename: 'combined.log'})
     ],
-    exitOnError: true,  // In development environment process should exit after error
-    level: 'verbose'     //Log for verbose and above                   
+    exitOnError: true,  // In development environment process should exit after error   //Log for verbose and above                   
 });
 
 const loggerProduction = createLogger({

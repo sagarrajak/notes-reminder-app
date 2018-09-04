@@ -1,21 +1,22 @@
 const mongoose = require('mongoose');
 const url = require('url');
+const logger = require('./src/logger/logger');
 
 if (process.env.NODE_ENV === 'development') {
     mongoose.connect(process.env.DATABASE_URL, {useNewUrlParser: true}, (err) => {
         if(err)
-            throw err;
+            logger.log('error', err);
         else {
-            console.log('connected to database!');
+            logger.info('connected to database!');
         }
     });
 } 
 else if (process.env.NODE_ENV === 'testing') {
     mongoose.connect(process.env.DATABASE_URL, {useNewUrlParser: true}, (err) => {
         if(err)
-            throw err;
+            logger.log('error', err);
         else {
-            console.log('connected to database!');
+            logger.info('connected to database!');
         }
     });
 } 
@@ -34,9 +35,9 @@ else if (process.env.NODE_ENV === 'production') {
     });
     mongoose.connect(mongoUrl, {useNewUrlParser: true} , (err) => {
         if(err)
-            throw err;
+            logger.log('error', err);
         else {
-            console.log('connected to database');
+            logger.info('connected to database!');
         }
     })
 }
