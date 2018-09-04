@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "mocha --timeout 100000",
-    "start-dev": "node server.js",
+    "start-dev": "nodemon server.js",
     "start-pro": ""
   },
   "author": "Sagar Rajak",
