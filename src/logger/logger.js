@@ -37,9 +37,29 @@ const loggerProduction = createLogger({
     level: 'info',    //error for warning and above for 'proudction' environment,
 });
 
+const loggerRequest = createLogger({
+    format: combine(
+        timestamp(),
+        format.splat(),
+        format.simple()
+    ),
+    transports: [
+        new transports.Console(),
+        new transports.File({filename: 'requests.log'})
+    ],
+    exitOnError: false,
+    level: 'info',    //error for warning and above for 'proudction' environment,
+});
+
 if (process.env.NODE_ENV === 'production') {
-    module.exports = loggerProduction;    
+    module.exports = { 
+       logger: loggerProduction,
+       requestLogger: loggerRequest
+    }    
 } else {
-    module.exports = loggerDevelopment;
+    module.exports = { 
+        logger: loggerDevelopment,
+        requestLogger: loggerRequest
+    }
 }
 

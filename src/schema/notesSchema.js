@@ -1,10 +1,12 @@
 const mongoose = require('mongoose');
 const notesSchema = mongoose.Schema({
-    title: { type: string, required: true },
-    time: { type: Date, required },
-    attachment: { type: string },
+    title: { type: String, required: true },
+    details: { type: String },
+    time: { type: Date, required: true},
+    attachment: { type: String },
     reminder: { 
-        type: mongoose.Schema.Types.ObjectId
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'reminder'
     }
 });
 

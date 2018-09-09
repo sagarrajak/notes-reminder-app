@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 
 const reminderSchema = mongoose.Schema({
     assigntime: { type: Date, required: true },
-    completime: { type: Date, require: true },
-    title: { type: String, required: true },
+    completetime: { type: Date, required: true },
+    for: { type: String, required: true },
     status: {
-        type: string,
+        type: String,
         enum: ['pending', 'seen', 'completed'] 
     }
 });
