@@ -5,6 +5,7 @@ const chaiHttp = require('chai-http');
 const should = chai.should();
 const expect = chai.expect;
 const testData = require('./notes.json');
+const fs = require('fs');
 chai.use(chaiHttp);
 
 const server = require('../server');
@@ -21,6 +22,31 @@ describe('routes: main', () => {
                 should.not.exist(err);
                 res.status.should.eql(200);
                 res.type.should.eql('application/json');
+                done();
+            });
+        });
+
+        it('should add note without reminder in server', (done) => {
+            chai.request(server)
+            .post('/api/')
+            .set('content-type', 'application/x-www-form-urlencoded')
+            .send(testData['note2'])
+            .end((err, res) => {
+                should.not.exist(err);
+                res.status.should.eql(200);
+                res.type.should.eql('application/json');
+                done();
+            });
+        });
+
+
+        it('should post image to server', (done) => {
+            chai.request(server)
+            .post('/api/files/')
+            .attach('image.png', 'test/t.png', 't.png')
+            .end((err, res) => {
+                should.not.exist(err);
+                res.status.should.eql(200);
                 console.log(res.body);
                 done();
             });
@@ -30,7 +56,6 @@ describe('routes: main', () => {
 
     describe('PUT/ ', () => {
             let id = null ; //varibale to store id of request object
-
             before((done) => {
                 chai.request(server)
                 .post('/api/') 
@@ -144,7 +169,7 @@ describe('routes: main', () => {
                     should.not.exist(err);
                     res.status.should.eql(200)
                     res.type.should.eql('application/json');
-                    res.body.should.have.property('success').eql('true');
+                    res.body.should.have.property('success').eql(true);
                     res.body.should.have.property('message').eql('Data deleted successfully');
                     done();
                 });

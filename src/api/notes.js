@@ -4,6 +4,7 @@ const NotesModal = require('../schema/notesSchema');
 const ReminerModel = require('../schema/reminderSchema');
 const logger = require('../logger/logger').logger;
 
+
 const router = Router({
     prefix: '/api'
 });
@@ -34,7 +35,6 @@ router.get('/:id', async (ctx) => {
 router.put('/:id', async (ctx, next) => {
     let id = ctx.params.id;
     let bdy = ctx.request.body;
-    console.log(ctx.request.body);
     const note = await NotesModal.findById(id);
     let newreminder; //New reimnder from request body
     let updatedReminder = null; //Updated reminder object 
@@ -196,12 +196,13 @@ router.del('/:id', async (ctx, next) => {
     }
 });
 
-router.post('/', async (ctx, next) => {
+router.post('/',  async (ctx, next) => {
     const bdy = ctx.request.body;
     let remindeObj = null;
     let newNote = null; 
     let reminder = null;
     let completetime = null;
+    console.log(ctx.request.body.files);
     try {
         reminder = bdy.reminder;
     } catch(err) {
@@ -210,11 +211,6 @@ router.post('/', async (ctx, next) => {
     
     if (reminder) {
         try {
-          if (reminder.completetime < new Date()) {
-            ctx.status =  500;
-            ctx.body = "Reminder date must be greather then date today";
-            return;
-          }
           remindeObj = await new ReminerModel({
                             assigntime: new Date(),
                             completetime: reminder.completetime,
@@ -253,6 +249,37 @@ router.post('/', async (ctx, next) => {
         ctx.body = err._message;
         ctx.app.emit('error', err, ctx);
      }
+});
+
+
+router.post('/files/',  async (ctx) => {
+    let files = null;
+    try {
+         files = ctx.request.files;
+         let data = [];
+         Object
+         .keys(files)
+         .forEach((key) => {
+            data.push({
+                name: files[key].name,
+                path: files[key].path,
+                type: files[key].type
+            });
+         });
+         ctx.status = 200;
+         ctx.body = data;
+    }
+    catch(err) {
+        ctx.status = 500;
+        ctx.body = {
+            message: "No file found",
+            success: false
+        }
+    }
+})
+
+router.get('/fetch' , async (ctx) => {
+
 });
 
 module.exports = router.routes();

@@ -5,7 +5,7 @@ const logger = require('./src/logger/logger').logger;
 const requestLogger = require('./src/logger/logger').requestLogger;
 const koaBody = require('koa-body'); 
 const app =  new Koa();
-
+const busboy = require('koa-busboy');
 //Api imported here 
 const notes = require('./src/api/notes');
 
@@ -24,7 +24,17 @@ switch (process.env.NODE_ENV) {
 const db = require('./database'); //Database object for query and all 
 
 // A middleware to log requests
-app.use(koaBody());
+app.use(
+    koaBody({
+            multipart: true,
+            urlencoded: true,
+            formidable: {
+                uploadDir: './assets',
+                keepExtensions: true,
+                onFileBegin: (name, file) => {}
+        }
+}));
+
 app.use(async (ctx, next) => {
     await next();
     requestLogger.info(ctx.origin+ctx.url + ' '+ctx.method+' '+ctx.status);
@@ -37,8 +47,9 @@ app.on('error', (err, ctx) => {
     }
 }); 
 
-app.use(notes);
 
+
+app.use(notes);
 const PORT = process.env.PORT||8080;
 const server = http.createServer(app.callback());
 server.listen(process.env.PORT||8080, () => {
